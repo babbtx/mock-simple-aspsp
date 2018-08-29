@@ -8,15 +8,17 @@ module CurrentUser
   included do
     rescue_from UserNotFound, with: :render_user_unauthorized
   end
+
   private
 
   def current_user
     authenticate_request!
-    @current_user ||= User.find_by(uuid: @auth_payload[:sub]) || maybe_raise_user_not_found
+    @current_user ||= User.find_by(uuid: @auth_payload[:sub])
   end
 
-  def maybe_raise_user_not_found
-    raise UserNotFound.new("User not found")
+  def current_user!
+    raise UserNotFound.new("User not found") unless current_user
+    @current_user
   end
 
   def render_user_unauthorized
