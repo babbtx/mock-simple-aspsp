@@ -80,6 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: mock-simple-aspsp_production
-  username: mock-simple-aspsp
-  password: <%= ENV['MOCK-SIMPLE-ASPSP_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
