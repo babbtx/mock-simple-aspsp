@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :accounts
-  resources :users
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  defaults format: 'json' do
+    scope '/OpenBanking/v1' do
+      resources :accounts, only: [:index, :show]
+    end
+  end
 end
