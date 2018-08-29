@@ -7,10 +7,22 @@ module OpenBankingObjectSerializer
     set_key_transform :camel
   end
 
-  # OpenBanking capitalizes data, links, meta and included
-  def serializable_hash
+  # OpenBanking capitalizes data, links, meta
+  def hash_for_one_record
     hash = super
-    new_hash = {Data: hash[:data], Links: hash[:links], Meta: hash[:meta], Included: hash[:included]}
+    new_hash = {Data: hash[:data], Links: hash[:links], Meta: hash[:meta]}
+    new_hash.delete_if {|k,v| v.nil?}
+  end
+
+  # Transform what is usually {data: [{type: Account, id: 1, attributes: {...}}]}
+  # And what is now {data: [{Account: {...}}]}
+  # To OpenBanking format, which is {Data: {Account: [{},{}]}}
+  # Also capitalize the other keys
+  def hash_for_collection
+    hash = super
+    data_hash = {}
+    data_hash[self.class.record_type] = (hash[:data] || []).collect{|obj| obj[:Account]}
+    new_hash = {Data: data_hash, Links: hash[:links], Meta: hash[:meta]}
     new_hash.delete_if {|k,v| v.nil?}
   end
 
