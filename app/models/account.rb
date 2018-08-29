@@ -17,4 +17,7 @@
 class Account < ApplicationRecord
   belongs_to :owner, class_name: 'User'
 
+  scope :for_user, ->(user) {
+    where(owner: user).where.not(owner_id: nil)
+  }
 end
