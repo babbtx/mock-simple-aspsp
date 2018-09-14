@@ -21,7 +21,7 @@ module OpenBankingObjectSerializer
   def hash_for_collection
     hash = super
     data_hash = {}
-    data_hash[self.class.record_type] = (hash[:data] || []).collect{|obj| obj[:Account]}
+    data_hash[self.class.record_type] = (hash[:data] || []).collect{|obj| obj[self.class.record_type]}
     new_hash = {Data: data_hash, Links: hash[:links], Meta: hash[:meta]}
     new_hash.delete_if {|k,v| v.nil?}
   end
