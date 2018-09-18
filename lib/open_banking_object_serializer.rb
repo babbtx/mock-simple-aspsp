@@ -15,13 +15,13 @@ module OpenBankingObjectSerializer
   end
 
   # Transform what is usually {data: [{type: Account, id: 1, attributes: {...}}]}
-  # And what is now {data: [{Account: {...}}]}
+  # And what is now {data: [{Account: [{...}]}]}
   # To OpenBanking format, which is {Data: {Account: [{},{}]}}
   # Also capitalize the other keys
   def hash_for_collection
     hash = super
     data_hash = {}
-    data_hash[self.class.record_type] = (hash[:data] || []).collect{|obj| obj[self.class.record_type]}
+    data_hash[self.class.record_type] = (hash[:data] || []).collect{|obj| obj[self.class.record_type]}.flatten
     new_hash = {Data: data_hash, Links: hash[:links], Meta: hash[:meta]}
     new_hash.delete_if {|k,v| v.nil?}
   end
@@ -33,10 +33,13 @@ module OpenBankingObjectSerializer
     end
 
     # instead it returns the type name in place of 'attributes'
+    # like {Account: {...}}
+    # only bizarrely it returns a single element in an array, too
+    # like {Account: [{...}]}
     def record_hash(*args)
       hash = super
       attrs = hash.delete(:attributes)
-      hash[record_type] = attrs if attrs
+      hash[record_type] = [attrs] if attrs
       hash
     end
   end
