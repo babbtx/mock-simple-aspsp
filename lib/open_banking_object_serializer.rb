@@ -8,6 +8,7 @@ module OpenBankingObjectSerializer
   end
 
   # OpenBanking capitalizes data, links, meta
+  # FIXME? maybe the single-element array for a single resource should be fixed here rather than below
   def hash_for_one_record
     hash = super
     new_hash = {Data: hash[:data], Links: hash[:links], Meta: hash[:meta]}
