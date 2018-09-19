@@ -16,6 +16,7 @@
 
 class Account < ApplicationRecord
   belongs_to :owner, class_name: 'User'
+  has_many :transactions, dependent: :delete_all
 
   scope :for_user, ->(user) {
     where(owner: user).where.not(owner_id: nil)
