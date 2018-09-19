@@ -32,6 +32,10 @@ class Transaction < ApplicationRecord
     # joins(:account_owner).where(account_owner: {id: user.id}) # This doesn't work
     joins(:account).where(accounts: {owner_id: user.id})
   }
+  scope :for_account, ->(account) {
+    account_id = Account === account ? account.id : account
+    where(account_id: account_id)
+  }
   scope :before, ->(record) {
     where('account_id = ? and booked_at <= ?', record.account_id, record.booked_at)
         .where.not(id: record.id)
