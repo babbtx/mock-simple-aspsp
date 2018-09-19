@@ -17,16 +17,11 @@
 class AccountSerializer
   include OpenBankingObjectSerializer
 
-  attributes :currency, :account_type, :nickname
+  attributes :currency, :account_type
 
-  # proper camel casing
-  attribute :account_sub_type do |account|
-    account.account_subtype
-  end
-
-  attribute :account_id do |account|
-    account.id
-  end
+  attribute :account_id, &:id
+  attribute :account_sub_type, &:account_subtype # renamed to fix camel casing
+  attribute :nickname, if: ->(account, params) { account.nickname.present? }
 
   # per spec, the following should only be returned if authorized consent has permission for ReadAccountsDetail
   attribute :account do |account|
