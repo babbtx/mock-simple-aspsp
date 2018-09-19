@@ -19,13 +19,19 @@
 
 class Transaction < ApplicationRecord
   belongs_to :account
+  has_one :account_owner, through: :account, source: :owner
 
   CREDIT = 0.freeze
   DEBIT = 1.freeze
   enum credit_or_debit: { credit: CREDIT, debit: DEBIT }
+
   monetize :amount_cents
   monetize :balance_cents
 
+  scope :for_user, ->(user) {
+    # joins(:account_owner).where(account_owner: {id: user.id}) # This doesn't work
+    joins(:account).where(accounts: {owner_id: user.id})
+  }
   scope :before, ->(record) {
     where('account_id = ? and booked_at <= ?', record.account_id, record.booked_at)
         .where.not(id: record.id)

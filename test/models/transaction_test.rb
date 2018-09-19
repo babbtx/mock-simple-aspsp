@@ -79,4 +79,17 @@ class TransactionTest < ActiveSupport::TestCase
     tx3 = Transaction.find(tx3.id)
     assert_equal Money.new(6, 'USD'), tx3.balance
   end
+
+  test "association to account owner" do
+    # just checking that i did this right
+    tx = FactoryBot.create :transaction, account: account
+    assert_equal account.owner, tx.account_owner
+  end
+
+  test "scope for user" do
+    FactoryBot.create :transaction, account: account
+    account2 = FactoryBot.create :account, owner: account.owner
+    FactoryBot.create :transaction, account: account2
+    assert_equal 2, Transaction.for_user(account.owner).size
+  end
 end
