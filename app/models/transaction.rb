@@ -46,6 +46,9 @@ class Transaction < ApplicationRecord
         .where.not(id: record.id)
         .order(:booked_at, :id)
   }
+  scope :most_recent, ->() {
+    order(booked_at: :desc)
+  }
 
   before_validation :set_balance_based_on_transaction_before
   after_save :update_balances_after
