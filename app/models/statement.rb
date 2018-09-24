@@ -16,12 +16,24 @@
 
 class Statement < ApplicationRecord
   belongs_to :account
+  has_one :account_owner, through: :account, source: :owner
 
   monetize :starting_amount_cents
   monetize :ending_amount_cents
 
+  scope :for_user, ->(user) {
+    # joins(:account_owner).where(account_owner: {id: user.id}) # This doesn't work
+    joins(:account).where(accounts: {owner_id: user.id})
+  }
+  scope :for_account, ->(account) {
+    account_id = Account === account ? account.id : account
+    where(account_id: account_id)
+  }
   scope :for_transaction_date, ->(datetime) {
     where('starting_at <= ? and ending_at > ?', datetime, datetime).limit(1)
+  }
+  scope :oldest_first, -> {
+    order(created_at: :asc)
   }
 
   before_validation :set_amounts_based_on_transactions

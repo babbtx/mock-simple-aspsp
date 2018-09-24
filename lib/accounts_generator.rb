@@ -32,6 +32,20 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
                                 merchant_code: "5932"
           end
         end
+
+        starting_at = account.transactions.oldest_first.first.booked_at.yesterday
+        ending_at = starting_at.next_quarter.change(day: 1, hour: 0, minute:0, seconds: 0)
+        last = DateTime.now.change(day: 1, hour: 0, minute:0, seconds: 0).prev_quarter
+        Statement.transaction do
+          begin
+            Statement.create! account: account,
+                              starting_at: starting_at,
+                              ending_at: ending_at,
+                              created_at: ending_at.tomorrow
+            starting_at = ending_at
+            ending_at = ending_at.next_quarter
+          end while ending_at <= last
+        end
       end
     end
   end
