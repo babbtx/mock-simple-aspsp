@@ -44,6 +44,11 @@ class Statement < ApplicationRecord
       .oldest_first
   end
 
+  def to_csv
+    # nothing about the statement itself; just return the transactions
+    transactions.oldest_first.to_csv
+  end
+
   private
 
   def set_amounts_based_on_transactions

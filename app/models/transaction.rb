@@ -16,6 +16,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
+require 'csv'
 
 class Transaction < ApplicationRecord
   belongs_to :account
@@ -56,6 +57,37 @@ class Transaction < ApplicationRecord
   before_validation :set_balance_based_on_transaction_before
   after_save :update_balances_on_transactions_after
   after_save :update_statement_containing_transaction
+
+  def self.to_csv
+    attrs_map = {
+        id: 'Transaction Id',
+        booked_at: 'Date Time',
+        description: 'Description',
+        merchant_name: 'Merchant',
+        merchant_code: 'Merchant Code',
+        amount: 'Amount',
+        balance: 'Balance'
+    }
+    CSV.generate(headers: true) do |csv|
+      csv << attrs_map.values
+      all.each do |tx|
+        csv << attrs_map.collect do |(attr,label)|
+          case attr
+            when :booked_at
+              tx.booked_at.localtime.iso8601
+            when :amount
+              amount = tx.amount
+              amount *= -1 if tx.debit?
+              amount.format(disambiguate: true)
+            when :balance
+              tx.balance.format(disambiguate: true)
+            else
+              tx.public_send(attr)
+          end
+        end
+      end
+    end
+  end
 
   private
 
