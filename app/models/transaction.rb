@@ -37,7 +37,7 @@ class Transaction < ApplicationRecord
     where(account_id: account_id)
   }
   scope :before, ->(record) {
-    where('account_id = ? and booked_at <= ?', record.account_id, record.booked_at)
+    where('account_id = ? and booked_at < ?', record.account_id, record.booked_at)
         .where.not(id: record.id)
         .order({booked_at: :desc}, {id: :desc})
   }
@@ -49,9 +49,13 @@ class Transaction < ApplicationRecord
   scope :most_recent, ->() {
     order(booked_at: :desc)
   }
+  scope :oldest_first, ->() {
+    order(booked_at: :asc)
+  }
 
   before_validation :set_balance_based_on_transaction_before
   after_save :update_balances_after
+  after_save :update_statement_containing_transaction
 
   private
 
@@ -68,5 +72,12 @@ class Transaction < ApplicationRecord
     # of course, this row locks everything for this account, so this is not very "real world"
     after = Transaction.after(self).first
     after.save if after
+  end
+
+  def update_statement_containing_transaction
+    # the statement calculates its amounts based on the transactions
+    # grab the statement that should contain this transaction and re-save it
+    statement = Statement.for_transaction_date(booked_at).first
+    statement.save if statement
   end
 end
