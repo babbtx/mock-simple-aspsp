@@ -10,7 +10,7 @@ class BalancesController < ApplicationController
     accounts = Account.where(id: params[:account_id]) if params[:account_id].present?
 
     transactions = accounts.collect(&:id).collect do |account|
-      Transaction.for_account(account).most_recent.first
+      Transaction.for_account(account).newest_first.first
     end
 
     self_url = params[:account_id].present? ? account_balances_url(params[:account_id]) : balances_url

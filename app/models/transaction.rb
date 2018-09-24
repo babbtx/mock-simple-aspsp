@@ -46,7 +46,7 @@ class Transaction < ApplicationRecord
         .where.not(id: record.id)
         .order(:booked_at, :id)
   }
-  scope :most_recent, ->() {
+  scope :newest_first, ->() {
     order(booked_at: :desc)
   }
   scope :oldest_first, ->() {
@@ -54,7 +54,7 @@ class Transaction < ApplicationRecord
   }
 
   before_validation :set_balance_based_on_transaction_before
-  after_save :update_balances_after
+  after_save :update_balances_on_transactions_after
   after_save :update_statement_containing_transaction
 
   private
@@ -66,7 +66,7 @@ class Transaction < ApplicationRecord
     self.balance = before.nil? ? adjusted_amount : before.balance + adjusted_amount
   end
 
-  def update_balances_after
+  def update_balances_on_transactions_after
     # grab the next transaction after this one and save it
     # that recalculates the balance based on this one and continues the process
     # of course, this row locks everything for this account, so this is not very "real world"
