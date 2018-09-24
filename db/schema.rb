@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_19_012648) do
+ActiveRecord::Schema.define(version: 2018_09_24_002146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,14 +28,27 @@ ActiveRecord::Schema.define(version: 2018_09_19_012648) do
     t.index ["owner_id"], name: "index_accounts_on_owner_id"
   end
 
+  create_table "statements", force: :cascade do |t|
+    t.bigint "account_id"
+    t.datetime "starting_at", null: false
+    t.datetime "ending_at", null: false
+    t.integer "starting_amount_cents"
+    t.string "starting_amount_currency"
+    t.integer "ending_amount_cents", null: false
+    t.string "ending_amount_currency", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_statements_on_account_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.bigint "account_id"
-    t.integer "amount_cents", default: 0, null: false
+    t.integer "amount_cents", null: false
     t.string "amount_currency", null: false
     t.datetime "booked_at", null: false
     t.integer "credit_or_debit", null: false
     t.string "description"
-    t.integer "balance_cents", default: 0, null: false
+    t.integer "balance_cents", null: false
     t.string "balance_currency", null: false
     t.string "merchant_name"
     t.string "merchant_code"
@@ -52,5 +65,6 @@ ActiveRecord::Schema.define(version: 2018_09_19_012648) do
   end
 
   add_foreign_key "accounts", "users", column: "owner_id"
+  add_foreign_key "statements", "accounts"
   add_foreign_key "transactions", "accounts"
 end

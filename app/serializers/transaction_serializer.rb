@@ -4,12 +4,12 @@
 #
 #  id               :bigint(8)        not null, primary key
 #  account_id       :bigint(8)
-#  amount_cents     :integer          default(0), not null
+#  amount_cents     :integer          not null
 #  amount_currency  :string           not null
 #  booked_at        :datetime         not null
 #  credit_or_debit  :integer          not null
 #  description      :string
-#  balance_cents    :integer          default(0), not null
+#  balance_cents    :integer          not null
 #  balance_currency :string           not null
 #  merchant_name    :string
 #  merchant_code    :string
