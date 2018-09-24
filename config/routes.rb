@@ -4,7 +4,9 @@ Rails.application.routes.draw do
       resources :accounts, only: [:index, :show] do
         resources :transactions, only: [:index]
         resources :balances, only: [:index]
-        resources :statements, only: [:index, :show]
+        resources :statements, only: [:index, :show] do
+          resources :transactions, only: [:index], controller: :statement_transactions
+        end
       end
       resources :transactions, only: [:index]
       resources :balances, only: [:index]
