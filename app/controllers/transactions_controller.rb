@@ -26,7 +26,7 @@ class TransactionsController < ApplicationController
     # within the code. It's sort of a way to do a double-check that the call below was done right.
     # However, IIRC, CanCanCan doesn't do well with collections like this.
 
-    transactions = transactions.order(:booked_at)
+    transactions = transactions.oldest_first
     self_url = params[:account_id].present? ? account_transactions_url(params[:account_id]) : transactions_url
     render json: TransactionSerializer.new(transactions,
                                            links: {Self: self_url},
