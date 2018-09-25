@@ -9,8 +9,8 @@ OpenBanking sets a new standard for user-managed data privacy in which
 users give fine-grained authorizations to third parties to access their data.
  
 While OpenBanking uses industry-standard OAuth2 to put users in control
-of which third parties can access the APIs, the fine-grained authorizations allow users to
-limit access to very specific resources with varying resource detail per API.
+of which third parties can *access* the APIs, the fine-grained authorizations allow users to
+limit access to very *specific resources* with *varying resource detail* per API.
 For example, users may authorize one third party to access to basic account details for all of his
 or her accounts, while authorizing another third party to access the past year's
 worth of detailed transaction history for only his or her bank card account. 
