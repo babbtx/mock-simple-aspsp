@@ -1,0 +1,26 @@
+{
+  "name": "mock-simple-aspsp",
+  "description": "A mock OpenBanking ASPSP API server",
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "options": {
+        "version": "9.6"
+      }
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "scripts": {
+    "postdeploy": "bundle exec rake db:setup"
+  }
+}
