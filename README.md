@@ -79,8 +79,8 @@ can inspect the request and response to guard against those breaches.
 
 1. No checking of authorized consents. Normally an API server would check the terms of the user's
 authorization either to validate the request and/or to tailor the response.
-The most egregious mistake herein is that no attempt is made to tailor the API responses 
-based on the user's authorized consent. Obviously there are several implications of this:
+The most egregious "mistake" herein is that no attempt is made to check and honor the
+user's authorized consent. Obviously there are several implications of this:
    * Access is allowed even when the user revokes his or her authorization.
    * Access is allowed to resource types that the user did not authorize.
    * The caller will get `Detailed` resource data for every resource which OpenBanking mandates `Basic` versus `Detailed` variations on resources.
