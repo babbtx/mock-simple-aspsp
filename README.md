@@ -134,7 +134,9 @@ Here's the script:
 ```bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 \curl -sSL https://get.rvm.io | bash -s stable --ruby
+. ~/.rvm/scripts/rvm
 brew install postgresql@9.6
+/usr/local/opt/postgresql@9.6/bin/pg_ctl -D /usr/local/var/postgresql@9.6 start
 rvm install ruby-2.4.1
 cd /path/to/cloned/repo
 rvm use ruby-2.4.1@mock-simple-aspsp
