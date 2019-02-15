@@ -13,5 +13,11 @@ Rails.application.routes.draw do
       resources :balances, only: [:index]
       resources :statements, only: [:index]
     end
+
+    namespace :private do
+      resources :users, only: [] do
+        resources :balances, only: [:index]
+      end
+    end
   end
 end
