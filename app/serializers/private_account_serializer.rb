@@ -12,6 +12,8 @@
 #  identification  :string(34)       not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  state           :integer          default(1)
+#  closed_at       :datetime
 #
 
 class PrivateAccountSerializer

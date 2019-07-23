@@ -12,6 +12,8 @@
 #  identification  :string(34)       not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  state           :integer          default(1)
+#  closed_at       :datetime
 #
 
 class Account < ApplicationRecord
@@ -22,4 +24,6 @@ class Account < ApplicationRecord
   scope :for_user, ->(user) {
     where(owner: user).where.not(owner_id: nil)
   }
+
+  enum state: { closed: 0, open: 1 }
 end
