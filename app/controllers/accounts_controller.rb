@@ -8,7 +8,8 @@ class AccountsController < ApplicationController
   end
 
   def show
-    account = Account.for_user(current_user!).find(params[:id])
+    #account = Account.for_user(current_user!).find(params[:id])
+    account = Account.find(params[:id])
     render json: AccountSerializer.new(account, links: {Self: account_url(account.id)}).serializable_hash
   end
 
