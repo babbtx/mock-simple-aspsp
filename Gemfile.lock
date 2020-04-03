@@ -98,6 +98,8 @@ GEM
     pg (1.0.0)
     puma (3.12.4)
     rack (2.2.2)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.4.2)
@@ -163,6 +165,7 @@ DEPENDENCIES
   money-rails
   pg (>= 0.18, < 2.0)
   puma (~> 3.12)
+  rack-cors
   rails (~> 5.2)
   spring
   spring-watcher-listen (~> 2.0.0)
