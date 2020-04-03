@@ -10,7 +10,7 @@
     {
       "plan": "heroku-postgresql:hobby-dev",
       "options": {
-        "version": "9.6"
+        "version": "12.2"
       }
     }
   ],
