@@ -37,6 +37,7 @@ end
 
 group :test do
   gem 'factory_bot_rails'
+  gem 'json', '~> 2.3'
 end
 
 
@@ -47,3 +48,4 @@ gem 'annotate'
 gem 'fast_jsonapi'
 gem 'jwt'
 gem 'money-rails'
+
