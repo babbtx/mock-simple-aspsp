@@ -7,12 +7,12 @@ module Private
       if transfer.errors.empty?
         head :created
       else
-        render status: 400, json: {
+        render status: 400, json: {errors: [{
             code: 400,
             status: Rack::Utils::HTTP_STATUS_CODES[400],
             title: 'error executing transfer',
             detail: transfer.errors.full_messages.to_sentence
-        }
+        }]}
       end
     end
 
@@ -23,11 +23,11 @@ module Private
     end
 
     def malformed_request(ex)
-      render status: 400, json: {
+      render status: 400, json: {errors: [{
           code: 400,
           status: Rack::Utils::HTTP_STATUS_CODES[400],
           title: ex.message
-      }
+       }]}
     end
   end
 end
