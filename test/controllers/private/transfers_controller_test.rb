@@ -24,7 +24,7 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   test "transfer" do
     data = {data: {type: 'transfer', attributes: {amount: 100, from_account_id: account1_txn.account_id, to_account_id: account2_txn.account_id}}}
     post private_transfers_url, params: data, as: :json
-    assert_response :success
+    assert_response :created
   end
 
   test "transfer fails because account must be real" do
