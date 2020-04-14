@@ -5,7 +5,7 @@ module Private
     def create
       transfer = Transfer.create(transfer_params)
       if transfer.errors.empty?
-        head :created
+        head :no_content
       else
         render status: 400, json: {errors: [{
             code: 400,
