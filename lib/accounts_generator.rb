@@ -22,14 +22,23 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
 
       user.accounts.each do |account|
         Transaction.transaction do
+          newest_transaction = nil
           100.downto(1) do |i|
-            Transaction.create! account: account,
-                                amount: Money.new(rand(1000 * 100), account.currency),
-                                credit_or_debit: [Transaction::CREDIT, Transaction::DEBIT].shuffle.first,
-                                booked_at: (i * 3).days.ago,
-                                description: IPSUMS.shuffle.first,
-                                merchant_name: IPSUMS.shuffle.first.split(/\s+/).take(3).join(' '),
-                                merchant_code: "5932"
+            # spin getting random amounts that won't make the balance go negative
+            amount, credit_or_debit, adjusted_amount = nil
+            begin
+              amount = Money.new(rand(1000 * 100), account.currency)
+              credit_or_debit = [Transaction::CREDIT, Transaction::DEBIT].shuffle.first
+              adjusted_amount = amount * ((credit_or_debit == Transaction::DEBIT) ? -1 : 1)
+            end while newest_transaction && (newest_transaction.balance + adjusted_amount) < 0
+
+            newest_transaction = Transaction.create! account: account,
+                                                     amount: amount,
+                                                     credit_or_debit: credit_or_debit,
+                                                     booked_at: (i * 3).days.ago,
+                                                     description: IPSUMS.shuffle.first,
+                                                     merchant_name: IPSUMS.shuffle.first.split(/\s+/).take(3).join(' '),
+                                                     merchant_code: "5932"
           end
         end
 
