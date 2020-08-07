@@ -10,7 +10,7 @@ module Private
 
       transactions = accounts.collect(&:id).collect do |account|
         Transaction.for_account(account).newest_first.first
-      end
+      end.compact
 
       render json: PrivateBalanceSerializer.new(transactions).serializable_hash
 
