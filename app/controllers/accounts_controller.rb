@@ -18,9 +18,7 @@ class AccountsController < ApplicationController
   # if we don't have the user yet
   # just generate a user and some accounts
   def create_user_and_accounts
-    unless current_user
-      @current_user = User.create(uuid: @auth_payload[:sub])
-      AccountsGenerator.generate_accounts_for_user(@current_user)
-    end
+    User.create(uuid: @auth_payload[:sub]) unless current_user
+    AccountsGenerator.generate_accounts_for_user(current_user) if Account.for_user(current_user).empty?
   end
 end
