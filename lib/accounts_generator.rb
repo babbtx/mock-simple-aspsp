@@ -47,8 +47,8 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
         end
 
         starting_at = account.transactions.oldest_first.first.booked_at.yesterday
-        ending_at = starting_at.next_quarter.change(day: 1, hour: 0, minute:0, seconds: 0)
-        last = DateTime.now.change(day: 1, hour: 0, minute:0, seconds: 0).prev_quarter
+        ending_at = starting_at.end_of_quarter.tomorrow.beginning_of_quarter # ending_at is not inclusive
+        last_ending_at = DateTime.now.beginning_of_quarter
         Statement.transaction do
           begin
             Statement.create! account: account,
@@ -57,7 +57,7 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
                               created_at: ending_at.tomorrow
             starting_at = ending_at
             ending_at = ending_at.next_quarter
-          end while ending_at <= last
+          end while ending_at <= last_ending_at
         end
       end
     end
