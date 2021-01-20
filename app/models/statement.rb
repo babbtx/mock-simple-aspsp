@@ -52,7 +52,7 @@ class Statement < ApplicationRecord
   private
 
   def set_amounts_based_on_transactions
-    transactions = self.transactions.all
+    transactions = self.transactions.to_a
     unless transactions.empty?
       self.starting_amount = transactions.first.balance
       self.ending_amount = transactions.last.balance

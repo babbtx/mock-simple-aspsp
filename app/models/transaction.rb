@@ -54,9 +54,10 @@ class Transaction < ApplicationRecord
     order(booked_at: :asc)
   }
 
-  before_validation :set_balance_based_on_transaction_before
-  after_save :update_balances_on_transactions_after
-  after_save :update_statement_containing_transaction
+  attr_accessor :during_generation
+  before_validation :set_balance_based_on_transaction_before, unless: :during_generation
+  after_save :update_balances_on_transactions_after, unless: :during_generation
+  after_save :update_statement_containing_transaction, unless: :during_generation
 
   def self.to_csv
     attrs_map = {

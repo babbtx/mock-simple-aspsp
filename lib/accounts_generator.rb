@@ -11,38 +11,44 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
 
   class << self
     def generate_accounts_for_user(user)
-      3.times do
-        Account.create! owner: user,
-                        currency: 'GBP',
-                        account_type: 'Personal',
-                        account_subtype: %w{ChargeCard CreditCard CurrentAccount EMoney Savings}.shuffle.first,
-                        scheme_name: 'SortCodeAccountNumber',
-                        identification: '%014d' % [rand(99999999999999)]
+      Account.transaction do
+        3.times do
+          Account.create! owner: user,
+                          currency: 'GBP',
+                          account_type: 'Personal',
+                          account_subtype: %w{ChargeCard CreditCard CurrentAccount EMoney Savings}.shuffle.first,
+                          scheme_name: 'SortCodeAccountNumber',
+                          identification: '%014d' % [rand(99999999999999)]
+        end
       end
 
       user.accounts.each do |account|
         Transaction.transaction do
           newest_transaction = nil
           100.downto(1) do |i|
-            amount, credit_or_debit, adjusted_amount = nil
+            amount, balance, credit_or_debit = nil
 
-            # don't let the amount go negative
+            # don't let the balance go negative
             if newest_transaction
               amount = rand(newest_transaction.balance.to_i + (1000 * 100)) - newest_transaction.balance.to_i
               credit_or_debit = amount < 0 ? Transaction::DEBIT : Transaction::CREDIT
               amount = Money.new(amount.abs, account.currency)
+              balance = newest_transaction.balance + (credit_or_debit == Transaction::DEBIT ? amount * -1 : amount)
             else
               amount = Money.new(rand(5000 * 100), account.currency)
+              balance = amount
               credit_or_debit = Transaction::CREDIT
             end
 
             newest_transaction = Transaction.create! account: account,
                                                      amount: amount,
+                                                     balance: balance,
                                                      credit_or_debit: credit_or_debit,
                                                      booked_at: (i * 3).days.ago,
                                                      description: IPSUMS.shuffle.first,
                                                      merchant_name: IPSUMS.shuffle.first.split(/\s+/).take(3).join(' '),
-                                                     merchant_code: "5932"
+                                                     merchant_code: "5932",
+                                                     during_generation: true
           end
         end
 
