@@ -32,19 +32,6 @@ class StatementTest < ActiveSupport::TestCase
     assert_includes statement.transactions, tx2
   end
 
-  test "calculates starting amount for credit" do
-    FactoryBot.create :transaction, account: account, amount: Money.new(1), credit_or_debit: Transaction::CREDIT, booked_at: 2.days.ago
-    statement = Statement.create account: account, starting_at: 3.days.ago, ending_at: DateTime.now
-    assert_equal Money.new(0), statement.starting_amount
-  end
-
-  test "calculates starting amount for debit" do
-    FactoryBot.create :transaction, account: account, amount: Money.new(10), credit_or_debit: Transaction::CREDIT, booked_at: 4.days.ago
-    FactoryBot.create :transaction, account: account, amount: Money.new(1), credit_or_debit: Transaction::DEBIT, booked_at: 2.days.ago
-    statement = Statement.create account: account, starting_at: 3.days.ago, ending_at: DateTime.now
-    assert_equal Money.new(10), statement.starting_amount
-  end
-
   test "inserting transaction updates statement" do
     tx1 = FactoryBot.create :transaction, account: account, amount: Money.new(1), credit_or_debit: Transaction::CREDIT, booked_at: 2.days.ago
     statement = Statement.create account: account, starting_at: 3.days.ago, ending_at: DateTime.now

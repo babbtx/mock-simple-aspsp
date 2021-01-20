@@ -54,9 +54,7 @@ class Statement < ApplicationRecord
   def set_amounts_based_on_transactions
     transactions = self.transactions.all
     unless transactions.empty?
-      balance_adjustment = transactions.first.amount
-      balance_adjustment *= -1 if transactions.first.credit?
-      self.starting_amount = transactions.first.balance + balance_adjustment
+      self.starting_amount = transactions.first.balance
       self.ending_amount = transactions.last.balance
     end
   end
