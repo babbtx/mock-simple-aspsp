@@ -24,13 +24,17 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
         Transaction.transaction do
           newest_transaction = nil
           100.downto(1) do |i|
-            # spin getting random amounts that won't make the balance go negative
             amount, credit_or_debit, adjusted_amount = nil
-            begin
-              amount = Money.new(rand(1000 * 100), account.currency)
-              credit_or_debit = [Transaction::CREDIT, Transaction::DEBIT].shuffle.first
-              adjusted_amount = amount * ((credit_or_debit == Transaction::DEBIT) ? -1 : 1)
-            end while newest_transaction && (newest_transaction.balance + adjusted_amount) < 0
+
+            # don't let the amount go negative
+            if newest_transaction
+              amount = rand(newest_transaction.balance.to_i + (1000 * 100)) - newest_transaction.balance.to_i
+              credit_or_debit = amount < 0 ? Transaction::DEBIT : Transaction::CREDIT
+              amount = Money.new(amount.abs, account.currency)
+            else
+              amount = Money.new(rand(5000 * 100), account.currency)
+              credit_or_debit = Transaction::CREDIT
+            end
 
             newest_transaction = Transaction.create! account: account,
                                                      amount: amount,
