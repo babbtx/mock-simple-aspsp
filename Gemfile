@@ -50,4 +50,4 @@ gem 'annotate'
 gem 'fast_jsonapi'
 gem 'jwt'
 gem 'money-rails'
-
+gem 'faraday', '~> 1.4.1'
