@@ -38,20 +38,21 @@ class GeneratorTest < ActiveSupport::TestCase
     # insert into accounts x 3
     # commit
     # select accounts
-    # (subtotal = 6)
+    # (subtotal before per account = 6)
     # PER ACCOUNT
-    # begin
-    # insert into transaction x 100
-    # commit
+    #   begin
+    #   insert into transaction x 100
+    #   commit
     # (transactions subtotal 102 x 3 = 306)
-    # select transactions
-    # begin
-    # PER STATEMENT (there are 4)
-    # select transactions
-    # insert into statements
-    # commit
-    # (statements subtotal 11 x 3 = 33)
-    # grand total = 345
-    assert_equal 345, statements.size, %{statements = \n#{statements.collect{|s|s[0,40]}.join("\n")}}
+    #   select transactions
+    #   begin
+    #     PER STATEMENT (PER ACCOUNT) (there are 3 statements per account)
+    #     # FIXME might be 4 depending on the day of the quarter?
+    #     select transactions
+    #     insert into statements
+    #   commit
+    # (statements subtotal (3 + 2 x 3) x 3 = 27)
+    # grand total = 339
+    assert_equal 339, statements.size, %{statements = \n#{statements.collect{|s|s[0,78]}.join("\n")}}
   end
 end
