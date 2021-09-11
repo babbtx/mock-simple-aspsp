@@ -126,7 +126,7 @@ Here's a crash course on running a Rails API on your Mac.
 1. Install Homebrew because you're going to need PostgreSQL.
 1. Install RVM to help you install Ruby.
 1. Brew install PostgreSQL 12.2
-1. RVM install Ruby 2.6.5
+1. RVM install Ruby 2.6.6
 1. Create a gemset to isolate this app's gems.
 1. Install the gems required by this app into that gemset.
 1. Create the database.
@@ -140,10 +140,10 @@ Here's the script:
 . ~/.rvm/scripts/rvm
 brew install postgresql
 pg_ctl -D /usr/local/var/postgres start
-rvm install ruby-2.6.5
+rvm install ruby-2.6.6
 cd /path/to/cloned/repo
 rvm gemset create mock-simple-aspsp
-rvm use ruby-2.6.5@mock-simple-aspsp
+rvm use ruby-2.6.6@mock-simple-aspsp
 bundle
 rake db:setup
 rails s
