@@ -79,7 +79,7 @@ GEM
     marcel (1.0.1)
     method_source (1.0.0)
     mini_mime (1.0.2)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.3)
     minitest (5.14.3)
     monetize (1.9.0)
       money (~> 6.12)
@@ -92,11 +92,12 @@ GEM
       railties (>= 3.0)
     msgpack (1.2.4)
     nio4r (2.5.4)
-    nokogiri (1.11.1)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     pg (1.0.0)
-    puma (3.12.6)
+    puma (4.3.8)
+      nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-cors (1.1.1)
@@ -165,9 +166,9 @@ DEPENDENCIES
   jwt
   listen (>= 3.0.5, < 3.2)
   money-rails
-  nokogiri (~> 1.11.x, >= 1.11.0.rc4)
+  nokogiri (~> 1.11)
   pg (>= 0.18, < 2.0)
-  puma (~> 3.12)
+  puma (~> 4.3)
   rack-cors
   rails (~> 5.2.5)
   spring

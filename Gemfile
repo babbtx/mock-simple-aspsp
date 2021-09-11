@@ -8,7 +8,7 @@ gem 'rails', '~> 5.2.5'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
@@ -41,7 +41,7 @@ group :test do
 end
 
 # fixing nokogiri vulnerability
-gem 'nokogiri', '>= 1.11.0.rc4', '~> 1.11.x'
+gem 'nokogiri', '~> 1.11'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
