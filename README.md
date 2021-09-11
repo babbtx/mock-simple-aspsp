@@ -11,23 +11,26 @@ users give fine-grained authorizations to third parties to access their data.
 While OpenBanking uses industry-standard OAuth2 to put users in control
 of which third parties can *access* the APIs, the fine-grained authorizations allow users to
 limit access to very *specific resources* with *varying resource detail* per API.
-For example, users may authorize one third party to access to basic account details for all of his
-or her accounts, while authorizing another third party to access the past year's
-worth of detailed transaction history for only his or her bank card account. 
+For example, users may authorize one third party to access to basic account details for all of
+their accounts, while authorizing another third party to access the past year's
+worth of detailed transaction history for only their bank card account. 
 
 This places new burden on API developers to ensure the user authorizations
 are enforced so that the wrong data doesn't get shared to a third party.
 
-[PingDataGovernance](https://www.pingidentity.com/en/platform/data-governance.html)
-is an API proxy that gives enterprises a second layer
-of data security to protect user-related data. With a flexible policy
-language and multiple data connectors, it is especially useful for
-use cases like user-managed data privacy where user preferences or consents
-dictate the authorization or restriction of exposing user-related data via APIs.
+[PingAuthorize](https://www.pingidentity.com/en/software/pingauthorize.html)
+is a dynamic authorization server built for use cases that go beyond 
+roles, OAuth, and claims-based authorization.
+With a flexible policy language and multiple data connectors,
+it is especially useful for use cases like user-managed data privacy
+where privacy preferences or consents dictate the
+authorization or restriction of exposing user-related data via APIs.
 
-This mock ASPSP includes several security omissions and mistakes that
-PingDataGovernance can filter or block in order to enforce data privacy
-and ensure protocol and regulation conformance.
+Additionally, this mock ASPSP includes several security omissions and mistakes.
+By using PingAuthorize with your API Gateway, PingAuthorize can add a 
+defense in depth to API platforms. 
+PingAuthorize can modify, filter, or block requests and responses
+in order to enforce data privacy and ensure protocol and regulation conformance.
 
 ## What's Included
 
@@ -58,7 +61,7 @@ This is a demo after all.
 1. No payment initiation APIs (yet...)
 
 1. The `account-requests` resource is altogether missing. This API is provided by
-the PingDataGovernance and PingDirectory servers: PingDataGovernance takes the staged consent
+the PingAuthorize and PingDirectory servers: PingAuthorize takes the staged consent
 from the AISP in the OpenBanking `account-request` format, then translates it and stores it
 in PingDirectory via
 [PingDirectory's consent API](https://apidocs.pingidentity.com/pingdirectory/consent/v1/api/guide/index.html).
@@ -74,14 +77,14 @@ a single page.
 ## What's Intentionally Broken
 
 A number of things are intentionally broken in order to highlight simple, common mistakes that
-developers could make which would unintentionally lead to data breach, and for which PingDataGovernance 
+developers could make which would unintentionally lead to data breach, and for which PingAuthorize 
 can inspect the request and response to guard against those breaches.
 
 1. No checking of authorized consents. Normally an API server would check the terms of the user's
 authorization either to validate the request and/or to tailor the response.
 The most egregious "mistake" herein is that no attempt is made to check and honor the
 user's authorized consent. Obviously there are several implications of this:
-   * Access is allowed even when the user revokes his or her authorization.
+   * Access is allowed even when the user revokes their authorization.
    * Access is allowed to resource types that the user did not authorize.
    * The caller will get `Detailed` resource data for every resource which OpenBanking mandates `Basic` versus `Detailed` variations on resources.
    * The caller can access transaction data outside the timeframes that the user has authorized (e.g. `TransactionFromDateTime`, `TransactionToDateTime`, ...)
@@ -149,7 +152,3 @@ rails s
 ### The DIY way -- On your non-Mac
 
 All of this stuff works on other operating systems. Good luck with that. 
-
-# Testing the APIs
-
-Coming soon, a Postman collection to play with the various APIs!
