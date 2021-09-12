@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     end
 
     namespace :private do
+      resource :permissions, only: [:show]
       resources :accounts, only: [:index, :show]
       resources :balances, only: [:index]
       resources :transfers, only: [:create]
