@@ -15,9 +15,11 @@ Rails.application.routes.draw do
     end
 
     namespace :private do
-      resources :accounts, only: [:show]
+      resources :accounts, only: [:index, :show]
+      resources :balances, only: [:index]
       resources :transfers, only: [:create]
       resources :users, only: [] do
+        resources :accounts, only: [:index]
         resources :balances, only: [:index]
       end
     end
