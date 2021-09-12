@@ -1,7 +1,8 @@
 module Private
-  class TransfersController < ActionController::API
+  class TransfersController < ApiController
     rescue_from ActionController::ParameterMissing, with: :malformed_request
 
+    # Transfer funds between any two accounts.
     def create
       transfer = Transfer.create(transfer_params)
       if transfer.errors.empty?
