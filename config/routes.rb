@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       resources :accounts, only: [:index, :show]
       resources :balances, only: [:index]
       resources :transfers, only: [:create]
+      resources :offers, only: [:index]
       resources :users, only: [] do
         resources :accounts, only: [:index]
         resources :balances, only: [:index]
