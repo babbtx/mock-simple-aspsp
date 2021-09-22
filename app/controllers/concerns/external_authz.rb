@@ -78,6 +78,30 @@ module ExternalAuthz
     authz_response.body
   end
 
+  # This authorizes an entire collection by (1) passing the array of ids to the server
+  # then (2) allowing/keeping the collection objects whose ids match any returned include-id
+  # then (3) denying/filtering the collection objects whose ids match any returned by exclude-id.
+  # The collection is modified in place.
+  # The ids are passed to the server like {"accounts": "[\"1\", \"2\"]"} -- note the JSON-formatted array.
+  # Same as #external_authorize!, this returns the authorization result.
+  def external_authorize_collection!(array, params = {}, typename: array.first.class.name.underscore)
+    if (array||[]).size == 0
+      external_authorize!(params)
+    else
+      get_id = -> (obj){ obj.respond_to?(:id) ? obj.id : obj.try(:[], :id) || obj.try(:[], 'id') }
+      authz_result = external_authorize!(params.merge(typename => array.collect(&get_id).to_json))
+      includes = (authz_result['statements']||[])
+                   .collect{|s| s['payload'] if s['code'] == 'include-id'}
+                   .compact
+      array.select!{ |obj| includes.collect(&:to_s).include?(get_id.call(obj).to_s) } unless includes.empty?
+      excludes = (authz_result['statements']||[])
+                   .collect{|s| s['payload'] if s['code'] == 'exclude-id'}
+                   .compact
+      array.reject!{ |obj| excludes.collect(&:to_s).include?(get_id.call(obj).to_s) } unless excludes.empty?
+      authz_result
+    end
+  end
+
   def render_authz_server_error
     head 500
   end

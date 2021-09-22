@@ -1,5 +1,7 @@
 module Private
   class OffersController < ApiController
+    include ExternalAuthz
+
     def index
       offers = [
         {
@@ -24,6 +26,8 @@ module Private
           description: 'Manage your own portfolio of stocks with low trading fees'
         }
       ]
+
+      external_authorize_collection!(offers, typename: 'offer')
 
       # convert to json-api
       json = {

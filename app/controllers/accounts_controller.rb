@@ -1,9 +1,11 @@
 class AccountsController < ApplicationController
+  include ExternalAuthz
 
   append_before_action :create_user_and_accounts
 
   def index
-    accounts = Account.for_user(current_user!)
+    accounts = Account.for_user(current_user!).to_a
+    external_authorize_collection!(accounts)
     render json: AccountSerializer.new(accounts, links: {Self: accounts_url}, meta: {TotalPages: 1}).serializable_hash
   end
 
