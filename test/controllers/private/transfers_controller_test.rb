@@ -5,6 +5,7 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   attr_accessor :account1_txn, :account2_txn
 
   setup do
+    ExternalAuthz.stubs(:configured?).returns(false)
     sign_in FactoryBot.create :user
     self.account1_txn = FactoryBot.create :transaction
     self.account2_txn = FactoryBot.create :transaction

@@ -39,6 +39,7 @@ end
 group :test do
   gem 'factory_bot_rails'
   gem 'json', '~> 2.3'
+  gem 'mocha'
 end
 
 # fixing nokogiri vulnerability
