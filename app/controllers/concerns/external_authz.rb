@@ -82,7 +82,15 @@ module ExternalAuthz
     head 500
   end
 
-  def render_authz_denied
-    head :forbidden
+  def render_authz_denied(ex)
+    reason = (ex.response_json['statements']||[])
+               .collect{|s| s['payload'] if s['code'] == 'denied-reason'}
+               .first
+    reason ||= 'Denied by authorization policy'
+    render status: 403, json: {errors: [{
+      code: 403,
+      status: Rack::Utils::HTTP_STATUS_CODES[403],
+      detail: reason
+    }]}
   end
 end
