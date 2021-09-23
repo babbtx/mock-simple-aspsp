@@ -41,6 +41,7 @@ module ExternalAuthz
   end
 
   def authz_environment_id
+    # this extracts the environment id from the decision URL
     %r{environments/(?<environment>[^/]+)} =~ ENV['PINGONE_AUTHZ_DECISION_URL']
     environment
   end
