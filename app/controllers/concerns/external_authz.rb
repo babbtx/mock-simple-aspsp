@@ -50,9 +50,18 @@ module ExternalAuthz
     current_user!.uuid
   end
 
+  def default_params
+    application_name = ENV['APPLICATION_NAME'] || 'TreeQuote'
+    {
+      Application: application_name,
+      "#{application_name}.Controller": controller_name,
+      "#{application_name}.Action": action_name
+    }
+  end
+
   def external_authorize!(params = {})
     request_body = {
-      parameters: params.merge(application: 'TreeQuote', controller: controller_name, action: action_name),
+      parameters: params.merge(default_params),
       userContext: {
         environment: { id: authz_environment_id },
         user: { id: authz_user_id }
