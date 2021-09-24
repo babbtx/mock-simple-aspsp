@@ -19,6 +19,8 @@
 class PrivateAccountSerializer
   include FastJsonapi::ObjectSerializer
 
+  attributes :account_type, :account_subtype, :identification
+
   attributes :owner_uuid do |account|
     account.owner.uuid
   end
