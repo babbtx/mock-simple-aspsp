@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
 
   def index
     accounts = Account.for_user(current_user!).to_a
-    external_authorize_collection!(accounts)
+    external_authorize_collection!(accounts) if ExternalAuthz.configured?
     render json: AccountSerializer.new(accounts, links: {Self: accounts_url}, meta: {TotalPages: 1}).serializable_hash
   end
 
