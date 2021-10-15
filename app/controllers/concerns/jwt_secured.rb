@@ -15,7 +15,11 @@ module JwtSecured
     @auth_payload ||= begin
       val = nil
       if mock_token.present?
-        val = JSON.parse(mock_token).with_indifferent_access
+        begin
+          val = JSON.parse(mock_token).with_indifferent_access
+        rescue JSON::JSONError
+          raise JWT::DecodeError
+        end
       else
         payload, header = JWT.decode(bearer_value, nil, false)
         @auth_header = header.with_indifferent_access
