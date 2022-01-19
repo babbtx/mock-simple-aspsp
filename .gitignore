@@ -25,3 +25,6 @@
 .ruby-version
 .ruby-gemset
 .env
+
+# SSL for dev environment
+ssl.*
