@@ -1,6 +1,9 @@
 module Private
   class TransfersController < ApiController
+    include ExternalAuthz
+
     rescue_from ActionController::ParameterMissing, with: :malformed_request
+    append_before_action :authorize_transfer
 
     # Transfer funds between any two accounts.
     def create
@@ -29,6 +32,12 @@ module Private
           status: Rack::Utils::HTTP_STATUS_CODES[400],
           title: ex.message
        }]}
+    end
+
+    def authorize_transfer
+      if ExternalAuthz.configured?
+        external_authorize!(transfer_params.as_json)
+      end
     end
   end
 end
