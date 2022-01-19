@@ -6,9 +6,21 @@ threads threads_count, threads_count
 
 preload_app!
 
+env  = ENV['RACK_ENV'] || 'development'
+port = ENV['PORT']     || 3000
+
 rackup      DefaultRackup
-port        ENV['PORT']     || 3000
-environment ENV['RACK_ENV'] || 'development'
+port        port
+environment env
+
+cert_file = File.expand_path(File.join(File.dirname(__FILE__), '../ssl.crt'))
+key_file = File.expand_path(File.join(File.dirname(__FILE__), '../ssl.key'))
+if env == 'development' && File.exists?(cert_file) && File.exists?(key_file)
+  ssl_bind('0.0.0.0', (port + 1),
+           cert: cert_file,
+           key: key_file,
+           verify_mode: 'none')
+end
 
 on_worker_boot do
   # Worker specific setup for Rails 4.1+
