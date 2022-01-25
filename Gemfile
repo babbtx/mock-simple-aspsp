@@ -40,6 +40,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'json', '~> 2.3'
   gem 'mocha'
+  gem 'webmock'
 end
 
 # fixing nokogiri vulnerability

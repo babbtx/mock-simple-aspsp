@@ -10,16 +10,8 @@ module PingOneClient
     end
 
     def new(options, &block)
-      unless @access_token && !@access_token.expired?
-        client = OAuth2::Client.new(ENV['PINGONE_CLIENT_ID'], ENV['PINGONE_CLIENT_SECRET'],
-                                    token_url: ENV['PINGONE_TOKEN_URL'],
-                                    token_method: :post,
-                                    auth_scheme: :basic_auth,
-                                    logger: Rails.logger)
-        @access_token = client.client_credentials.get_token
-      end
       Faraday.new(options) do |f|
-        f.request :authorization, 'Bearer', @access_token.token
+        f.request :authorization, 'Bearer', access_token.token
         f.response :json
         f.response :logger, Rails.logger, {headers: true, bodies: true} if debug?
         yield(f) if block_given?
@@ -29,6 +21,20 @@ module PingOneClient
 
     def debug?
       %w[ true on yes 1 ].include?(ENV['PINGONE_DEBUG'])
+    end
+
+    private
+
+    def access_token
+      unless @access_token && !@access_token.expired?
+        client = OAuth2::Client.new(ENV['PINGONE_CLIENT_ID'], ENV['PINGONE_CLIENT_SECRET'],
+                                    token_url: ENV['PINGONE_TOKEN_URL'],
+                                    token_method: :post,
+                                    auth_scheme: :basic_auth,
+                                    logger: Rails.logger)
+        @access_token = client.client_credentials.get_token
+      end
+      @access_token
     end
 
   end # class << self
