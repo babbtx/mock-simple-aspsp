@@ -11,7 +11,7 @@ module PingOneClient
 
     def new(options, &block)
       Faraday.new(options) do |f|
-        f.request :authorization, 'Bearer', access_token.token
+        f.request :authorization, 'Bearer', -> { access_token.token }
         f.response :json
         f.response :logger, Rails.logger, {headers: true, bodies: true} if debug?
         yield(f) if block_given?
