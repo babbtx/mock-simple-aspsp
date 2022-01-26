@@ -5,7 +5,6 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   attr_accessor :account1_txn, :account2_txn
 
   setup do
-    ExternalAuthz.stubs(:configured?).returns(false)
     sign_in FactoryBot.create :user
     self.account1_txn = FactoryBot.create :transaction
     self.account2_txn = FactoryBot.create :transaction
@@ -78,7 +77,6 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer permitted by external authz" do
-    ExternalAuthz.unstub(:configured?)
     ExternalAuthz.expects(:configured?).returns(true)
     Private::TransfersController.any_instance.
       expects(:external_authorize!).
@@ -99,7 +97,6 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer denied by external authz" do
-    ExternalAuthz.unstub(:configured?)
     ExternalAuthz.expects(:configured?).returns(true)
     Private::TransfersController.any_instance.
       expects(:external_authorize!).
@@ -120,7 +117,6 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer denied by external authz with custom error message" do
-    ExternalAuthz.unstub(:configured?)
     ExternalAuthz.expects(:configured?).returns(true)
     authz_result = {'statements' => [
       {'code' => 'denied-reason', 'payload' => 'Custom error message'}

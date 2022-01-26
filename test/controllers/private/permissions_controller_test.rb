@@ -3,7 +3,6 @@ require 'test_helper'
 class Private::PermissionsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
-    ExternalAuthz.stubs(:configured?).returns(false)
     sign_in FactoryBot.create :user
   end
 
@@ -19,7 +18,6 @@ class Private::PermissionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "external authz returns default of accounts if no statements are returned" do
-    ExternalAuthz.unstub(:configured?)
     ExternalAuthz.expects(:configured?).returns(true)
     Private::PermissionsController.any_instance.expects(:external_authorize!).returns({})
 
@@ -36,7 +34,6 @@ class Private::PermissionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "collects the results of all statements from external authz" do
-    ExternalAuthz.unstub(:configured?)
     ExternalAuthz.expects(:configured?).returns(true)
     authz_result = {'statements' => [
       {'code' => 'set-permission', 'payload' => 'transfers'},

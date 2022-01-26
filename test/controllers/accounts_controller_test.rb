@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class AccountsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    ExternalAuthz.stubs(:configured?).returns(false)
-  end
 
   test "OpenBanking Accounts format bulk" do
     account = FactoryBot.create :account

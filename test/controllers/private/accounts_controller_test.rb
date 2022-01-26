@@ -2,7 +2,6 @@ require 'test_helper'
 
 class Private::AccountsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    ExternalAuthz.stubs(:configured?).returns(false)
     sign_in FactoryBot.create :user
   end
 

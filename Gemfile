@@ -53,7 +53,7 @@ gem 'annotate'
 gem 'fast_jsonapi'
 gem 'jwt'
 gem 'money-rails'
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', groups: [:development]
 
 # for external authorization with PingOne
 gem 'faraday'
