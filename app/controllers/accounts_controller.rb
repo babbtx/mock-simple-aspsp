@@ -12,6 +12,7 @@ class AccountsController < ApplicationController
   def show
     #account = Account.for_user(current_user!).find(params[:id])
     account = Account.find(params[:id])
+    external_authorize!(account: params[:id]) if ExternalAuthz.configured?
     render json: AccountSerializer.new(account, links: {Self: account_url(account.id)}).serializable_hash
   end
 
