@@ -1,6 +1,7 @@
 module ExternalAuthz
   extend ActiveSupport::Concern
   include CurrentUser
+  include ExternalAuthzEnvConfig
 
   CORRELATION_HEADERS = %w[
     Correlation-Id
@@ -26,23 +27,15 @@ module ExternalAuthz
     rescue_from ExternalAuthorizationDenied, with: :render_authz_denied
   end
 
-  class << self
-    def configured?
-      PingOneClient.configured? && ENV['PINGONE_AUTHZ_DECISION_URL']
-    end
-  end
-
   protected
 
   def decision_service
-    @@authz_client ||= PingOneClient.new(url: ENV['PINGONE_AUTHZ_DECISION_URL']) do |faraday|
-      faraday.request :json
-    end
+    @@authz_client ||= PingOneClient.new(ping_one_client_options)
   end
 
   def authz_environment_id
     # this extracts the environment id from the decision URL
-    %r{environments/(?<environment>[^/]+)} =~ ENV['PINGONE_AUTHZ_DECISION_URL']
+    %r{environments/(?<environment>[^/]+)} =~ decision_url
     environment
   end
 
