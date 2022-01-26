@@ -52,7 +52,7 @@ Fingerstache kickstarter photo booth asymmetrical. Pinterest swag vegan celiac v
           end
         end
 
-        starting_at = account.transactions.oldest_first.first.booked_at.yesterday
+        starting_at = account.transactions.oldest_first.first.booked_at
         ending_at = starting_at.end_of_quarter.tomorrow.beginning_of_quarter # ending_at is not inclusive
         last_ending_at = DateTime.now.beginning_of_quarter
         Statement.transaction do
