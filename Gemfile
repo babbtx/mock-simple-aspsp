@@ -41,6 +41,7 @@ group :test do
   gem 'json', '~> 2.3'
   gem 'mocha'
   gem 'webmock'
+  gem 'climate_control'
 end
 
 # fixing nokogiri vulnerability
