@@ -54,13 +54,15 @@ class ExternalAuthzTest < ActionDispatch::IntegrationTest
       .with(headers: {authorization: "Bearer token"}, body: expected_authz_request.to_json)
       .to_return(status: 200, body: permit_response.to_json)
 
-    get account_url(account), as: :json, headers: authz_headers.merge('X-PingOneAuthorize-Config': config.to_json)
+    get account_url(account), as: :json, headers: authz_headers.merge('X-PingOneAuthz-Config': config.to_json)
     assert_response :success
+    assert_requested(:post, token_url)
+    assert_requested(:post, decision_url)
   end
 
   test "external authz disabled on bad header value" do
     account = FactoryBot.create :account, owner: @current_user
-    get account_url(account), as: :json, headers: authz_headers.merge('X-PingOneAuthorize-Config': "blah")
+    get account_url(account), as: :json, headers: authz_headers.merge('X-PingOneAuthz-Config': "blah")
     assert_response :success
     assert_not_requested(:post, token_url)
     assert_not_requested(:post, decision_url)
