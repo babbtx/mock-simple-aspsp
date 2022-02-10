@@ -18,8 +18,12 @@ class Private::PermissionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "external authz returns default of accounts if no statements are returned" do
-    ExternalAuthz.expects(:configured?).returns(true)
-    Private::PermissionsController.any_instance.expects(:external_authorize!).returns({})
+    Private::PermissionsController.any_instance.
+      expects(:external_authz_configured?).
+      returns(true)
+    Private::PermissionsController.any_instance.
+      expects(:external_authorize!).
+      returns({})
 
     get private_permissions_url, as: :json, headers: authz_headers
     assert_response :success
@@ -34,13 +38,17 @@ class Private::PermissionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "collects the results of all statements from external authz" do
-    ExternalAuthz.expects(:configured?).returns(true)
     authz_result = {'statements' => [
       {'code' => 'set-permission', 'payload' => 'transfers'},
       {'code' => 'set-permission', 'payload' => 'offers'},
       {'code' => 'set-permission', 'payload' => 'custom'},
     ]}
-    Private::PermissionsController.any_instance.expects(:external_authorize!).returns(authz_result)
+    Private::PermissionsController.any_instance.
+      expects(:external_authz_configured?).
+      returns(true)
+    Private::PermissionsController.any_instance.
+      expects(:external_authorize!).
+      returns(authz_result)
 
     get private_permissions_url, as: :json, headers: authz_headers
     assert_response :success

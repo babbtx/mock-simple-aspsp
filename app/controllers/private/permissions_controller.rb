@@ -12,7 +12,7 @@ module Private
     private
 
     def get_permissions
-      if ExternalAuthz.configured?
+      if external_authz_configured?
         authz_result = external_authorize!
         permissions = (authz_result['statements']||[])
           .select {|statement| statement['code'] == 'set-permission' }

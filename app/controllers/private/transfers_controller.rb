@@ -35,9 +35,7 @@ module Private
     end
 
     def authorize_transfer
-      if ExternalAuthz.configured?
-        external_authorize!(transfer_params.as_json)
-      end
+      external_authorize!(transfer_params.as_json) if external_authz_configured?
     end
   end
 end

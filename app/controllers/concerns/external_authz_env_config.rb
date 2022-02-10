@@ -1,21 +1,22 @@
 module ExternalAuthzEnvConfig
   extend ActiveSupport::Concern
 
-  # doing this "the old way" in order to define this method on the including module,
-  # not on the ultimate class in which the modules are included
-  # e.g. ExternalAuthz.configured?
-  def self.included(base)
-    base.class_eval do
-      def self.configured?
-        %w[
-          PINGONE_AUTHZ_DECISION_URL
-          PINGONE_TOKEN_URL
-          PINGONE_CLIENT_ID
-          PINGONE_CLIENT_SECRET
-        ].all? do |var|
-          ENV[var].present?
-        end
-      end
+  def self.ping_one_env_configured?
+    %w[
+      PINGONE_AUTHZ_DECISION_URL
+      PINGONE_TOKEN_URL
+      PINGONE_CLIENT_ID
+      PINGONE_CLIENT_SECRET
+    ].all? do |var|
+      ENV[var].present?
+    end
+  end
+
+  def external_authz_configured?
+    unless Rails.env.test?
+      @@external_authz_configured ||= ExternalAuthzEnvConfig.ping_one_env_configured?
+    else
+      ExternalAuthzEnvConfig.ping_one_env_configured?
     end
   end
 
@@ -29,6 +30,6 @@ module ExternalAuthzEnvConfig
   end
 
   def decision_url
-    ENV['PINGONE_AUTHZ_DECISION_URL']
+    ping_one_client_options[:url]
   end
 end

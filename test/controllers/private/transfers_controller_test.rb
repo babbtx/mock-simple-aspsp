@@ -77,7 +77,9 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer permitted by external authz" do
-    ExternalAuthz.expects(:configured?).returns(true)
+    Private::TransfersController.any_instance.
+      expects(:external_authz_configured?).
+      returns(true)
     Private::TransfersController.any_instance.
       expects(:external_authorize!).
       returns({})
@@ -97,7 +99,9 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer denied by external authz" do
-    ExternalAuthz.expects(:configured?).returns(true)
+    Private::TransfersController.any_instance.
+      expects(:external_authz_configured?).
+      returns(true)
     Private::TransfersController.any_instance.
       expects(:external_authorize!).
       raises(ExternalAuthz::ExternalAuthorizationDenied.new('DENY', {}))
@@ -117,10 +121,12 @@ class Private::TransfersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "transfer denied by external authz with custom error message" do
-    ExternalAuthz.expects(:configured?).returns(true)
     authz_result = {'statements' => [
       {'code' => 'denied-reason', 'payload' => 'Custom error message'}
     ]}
+    Private::TransfersController.any_instance.
+      expects(:external_authz_configured?).
+      returns(true)
     Private::TransfersController.any_instance.
       expects(:external_authorize!).
       raises(ExternalAuthz::ExternalAuthorizationDenied.new('DENY', authz_result))
