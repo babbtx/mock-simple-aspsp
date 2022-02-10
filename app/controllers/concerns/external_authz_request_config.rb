@@ -11,7 +11,7 @@ module ExternalAuthzRequestConfig
 
   def ping_one_client_options
     JSON.parse(request.headers['X-PingOneAuthz-Config'] || '{}', symbolize_names: true)
-  rescue JSONError
+  rescue JSON::JSONError
     logger.warn "External authz disabled after error parsing X-PingOneAuthz-Config value: #{request.headers['X-PingOneAuthz-Config']}"
     {}
   end
