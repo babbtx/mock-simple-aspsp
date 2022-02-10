@@ -213,6 +213,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
   climate_control
+  concurrent-ruby
   dotenv-rails
   factory_bot_rails
   faraday

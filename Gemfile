@@ -60,3 +60,4 @@ gem 'dotenv-rails', groups: [:development]
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'oauth2'
+gem 'concurrent-ruby'

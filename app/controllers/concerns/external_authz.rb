@@ -1,3 +1,5 @@
+$decision_service_clients = Concurrent::Map.new
+
 module ExternalAuthz
   extend ActiveSupport::Concern
   include CurrentUser
@@ -31,7 +33,8 @@ module ExternalAuthz
 
   def decision_service
     config = ping_one_client_options
-    Rails.cache.fetch(config.to_json) do
+    key = config.sort.to_h
+    $decision_service_clients.compute_if_absent(key) do
       PingOneClient.new(config)
     end
   end
