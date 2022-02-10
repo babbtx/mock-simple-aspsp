@@ -1,7 +1,7 @@
 module ExternalAuthz
   extend ActiveSupport::Concern
   include CurrentUser
-  include ExternalAuthzEnvConfig
+  include ExternalAuthzRequestConfig
 
   CORRELATION_HEADERS = %w[
     Correlation-Id
@@ -30,7 +30,10 @@ module ExternalAuthz
   protected
 
   def decision_service
-    @@authz_client ||= PingOneClient.new(ping_one_client_options)
+    config = ping_one_client_options
+    Rails.cache.fetch(config.to_json) do
+      PingOneClient.new(config)
+    end
   end
 
   def authz_environment_id

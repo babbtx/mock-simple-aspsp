@@ -1,3 +1,4 @@
+# this module extracts the PingOne Authorize configuration from the environment
 module ExternalAuthzEnvConfig
   extend ActiveSupport::Concern
 
