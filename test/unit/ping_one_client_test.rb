@@ -4,7 +4,7 @@ class PingOneClientTest < ActiveSupport::TestCase
 
   test "gets access token" do
     access_token = stub(token: 'token')
-    PingOneClient.expects(:access_token).once.returns(access_token)
+    PingOneClient.any_instance.expects(:access_token).once.returns(access_token)
 
     url = 'https://example.com/pdp'
     stub_request(:any, url)
@@ -17,7 +17,7 @@ class PingOneClientTest < ActiveSupport::TestCase
 
   test "checks access token each time" do
     access_token = stub(token: 'token')
-    PingOneClient.expects(:access_token).twice.returns(access_token)
+    PingOneClient.any_instance.expects(:access_token).twice.returns(access_token)
 
     url = 'https://example.com/pdp'
     stub_request(:any, url)

@@ -1,19 +1,23 @@
 require 'oauth2'
 
-module PingOneClient
-  class << self
+class PingOneClient
 
     ATTRS = [:client_id, :client_secret, :token_url].freeze
 
     attr_accessor *ATTRS
 
-    def new(options, &block)
+    def initialize(options, &block)
       options = extract_and_assign_attrs(options)
-      create_http_client(options, &block)
+      @mutex = Mutex.new
+      @client = create_http_client(options, &block)
     end
 
     def debug?
       %w[ true on yes 1 ].include?(ENV['PINGONE_DEBUG'])
+    end
+
+    def post(*args)
+      @client.post(*args)
     end
 
     private
@@ -37,16 +41,17 @@ module PingOneClient
     end
 
     def access_token
-      unless @access_token && !@access_token.expired?
-        client = OAuth2::Client.new(client_id, client_secret,
-                                    token_url: token_url,
-                                    token_method: :post,
-                                    auth_scheme: :basic_auth,
-                                    logger: Rails.logger)
-        @access_token = client.client_credentials.get_token
+      @mutex.synchronize do
+        unless @access_token && !@access_token.expired?
+          client = OAuth2::Client.new(client_id, client_secret,
+                                      token_url: token_url,
+                                      token_method: :post,
+                                      auth_scheme: :basic_auth,
+                                      logger: Rails.logger)
+          @access_token = client.client_credentials.get_token
+        end
+        @access_token
       end
-      @access_token
     end
 
-  end # class << self
 end
