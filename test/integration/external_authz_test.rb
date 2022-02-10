@@ -58,6 +58,8 @@ class ExternalAuthzTest < ActionDispatch::IntegrationTest
 
       get account_url(account), as: :json, headers: authz_headers
       assert_response :success
+      assert_requested(:post, token_url)
+      assert_requested(:post, decision_url)
     end
   end
 end
