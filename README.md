@@ -71,7 +71,7 @@ to map it to a hypothetical account owner. No signature verification or anything
 This was done for simplicity sake rather than as a mock vulnerability, though you could consider it
 a mock vulnerability too.
 
-1. No filtering nor paging on the transactions API or the statements API. Resources are returned in
+1. No paging on the transactions API or the statements API. Resources are returned in
 a single page.
 
 ## What's Intentionally Broken
