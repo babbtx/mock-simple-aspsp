@@ -37,12 +37,12 @@ class Transaction < ApplicationRecord
     account_id = Account === account ? account.id : account
     where(account_id: account_id)
   }
-  scope :before, ->(record) {
+  scope :before_transaction, ->(record) {
     where('account_id = ? and booked_at < ?', record.account_id, record.booked_at)
         .where.not(id: record.id)
         .order({booked_at: :desc}, {id: :desc})
   }
-  scope :after, ->(record) {
+  scope :after_transaction, ->(record) {
     where('account_id = ? and booked_at >= ?', record.account_id, record.booked_at)
         .where.not(id: record.id)
         .order(:booked_at, :id)
@@ -95,7 +95,7 @@ class Transaction < ApplicationRecord
   def set_balance_based_on_transaction_before
     adjusted_amount = self.amount
     adjusted_amount *= -1 if self.debit?
-    before = Transaction.before(self).first
+    before = Transaction.before_transaction(self).first
     self.balance = before.nil? ? adjusted_amount : before.balance + adjusted_amount
   end
 
@@ -103,7 +103,7 @@ class Transaction < ApplicationRecord
     # grab the next transaction after this one and save it
     # that recalculates the balance based on this one and continues the process
     # of course, this row locks everything for this account, so this is not very "real world"
-    after = Transaction.after(self).first
+    after = Transaction.after_transaction(self).first
     after.save if after
   end
 
