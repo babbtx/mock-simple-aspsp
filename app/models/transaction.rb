@@ -37,10 +37,16 @@ class Transaction < ApplicationRecord
     account_id = Account === account ? account.id : account
     where(account_id: account_id)
   }
+  scope :before, ->(datetime) {
+    where('booked_at <= ?', datetime)
+  }
   scope :before_transaction, ->(record) {
     where('account_id = ? and booked_at < ?', record.account_id, record.booked_at)
         .where.not(id: record.id)
         .order({booked_at: :desc}, {id: :desc})
+  }
+  scope :after, ->(datetime) {
+    where('booked_at >= ?', datetime)
   }
   scope :after_transaction, ->(record) {
     where('account_id = ? and booked_at >= ?', record.account_id, record.booked_at)
