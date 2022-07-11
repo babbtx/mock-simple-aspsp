@@ -1,7 +1,7 @@
 {
   "name": "mock-simple-aspsp",
   "description": "A mock OpenBanking ASPSP API server",
-  "stack": "heroku-18",
+  "stack": "heroku-20",
   "buildpacks": [
     {
       "url": "heroku/ruby"
